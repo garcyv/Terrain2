@@ -41,14 +41,17 @@ class MarsRepository {
     //Funcion q utiliza coroutines
     suspend fun getTerrainWithCoroutines(){
         Log.d("REPOSITORY","USO CORoutines")
-        val response = RetrofitClient.retrofitInstance().fetchMarsTerrainCoroutines()
-        when (response.isSuccessful){
-            true -> response.body()?.let{
-                liveDataMarsTerrain.value= it
+        try {
+            val response = RetrofitClient.retrofitInstance().fetchMarsTerrainCoroutines()
+            when (response.isSuccessful) {
+                true -> response.body()?.let {
+                    liveDataMarsTerrain.value = it
+                }
+                false -> Log.d("ERROR", " ${response.code()}: ${response.errorBody()}")
             }
-            false -> Log.d("ERROR"," ${response.code()}: ${response.errorBody()}")
+        } catch (t:Throwable){
+            Log.d("ERROR COR",t.message.toString())
         }
-
     }
 
 }
