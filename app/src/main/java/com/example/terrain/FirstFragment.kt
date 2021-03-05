@@ -10,6 +10,7 @@ import android.widget.Button
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.terrain.databinding.FragmentFirstBinding
 
 /**
@@ -30,21 +31,28 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = TerrainAdapter()
+        binding.rvTerrain.adapter =adapter
+        binding.rvTerrain.layoutManager = GridLayoutManager(context,2)
+
 
          viewModel.getFetchTerrains().observe(viewLifecycleOwner, Observer {
              it?.let {
-                 Log.d("LISTADO",it.toString())
+                // Log.d("LISTADO",it.toString())
+                 adapter.update(it)
              }
          })
 
         viewModel.getFetchTerrainsWithCoroutines().observe(viewLifecycleOwner, Observer {
             it?.let {
-                Log.d("LISTADO COR",it.toString())
+               // Log.d("LISTADO COR",it.toString())
+                adapter.update(it)
             }
         })
 
-        view.findViewById<Button>(R.id.button_first).setOnClickListener {
+     /*   view.findViewById<Button>(R.id.button_first).setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-        }
-    }
+           }
+           */
+}
 }
