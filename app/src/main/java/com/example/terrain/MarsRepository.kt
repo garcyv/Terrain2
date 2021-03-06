@@ -8,10 +8,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MarsRepository {
+class MarsRepository(private val marsTerrainDao: MarsTerrainDao) {
 
     private val services = RetrofitClient.retrofitInstance()
     val liveDataMarsTerrain = MutableLiveData<List<MarsTerrain>>()
+   val listAllData: LiveData<List<MarsTerrain>> = marsTerrainDao.getAllTerrainsFromDB()
+
+    suspend fun insertAllMarsterrain(listMarsTerrain: List<MarsTerrain>){
+        marsTerrainDao.insertAllTerrains(listMarsTerrain)
+    }
 
     //vieja confiable
     fun fetchMarsTerrainEnqueue(): LiveData<List<MarsTerrain>> {
@@ -45,7 +50,8 @@ class MarsRepository {
             val response = RetrofitClient.retrofitInstance().fetchMarsTerrainCoroutines()
             when (response.isSuccessful) {
                 true -> response.body()?.let {
-                    liveDataMarsTerrain.value = it
+                   // liveDataMarsTerrain.value = it
+                   insertAllMarsterrain(it)
                 }
                 false -> Log.d("ERROR", " ${response.code()}: ${response.errorBody()}")
             }

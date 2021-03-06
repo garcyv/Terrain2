@@ -36,7 +36,7 @@ class FirstFragment : Fragment() {
         binding.rvTerrain.layoutManager = GridLayoutManager(context,2)
 
 
-         viewModel.getFetchTerrains().observe(viewLifecycleOwner, Observer {
+         viewModel.allData.observe(viewLifecycleOwner, Observer {
              it?.let {
                 // Log.d("LISTADO",it.toString())
                  adapter.update(it)
@@ -50,6 +50,13 @@ class FirstFragment : Fragment() {
             }
         })
 
+        adapter.selected.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.selected(it)
+                findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+
+            }
+        })
      /*   view.findViewById<Button>(R.id.button_first).setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
            }
